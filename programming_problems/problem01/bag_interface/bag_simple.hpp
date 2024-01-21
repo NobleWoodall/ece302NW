@@ -3,7 +3,8 @@
 
 #include "abstract_bag.hpp"
 
-template<typename T> class Bag{
+
+template<typename T> class Bag : public AbstractBag<T>{
 public:
 
   Bag();
@@ -33,6 +34,6 @@ private:
   T data[MAXSIZE];
 };
 
-#include "bag_simple.tpp"
+#include "bag_simple.tpp" // why is there an include here
 
 #endif
