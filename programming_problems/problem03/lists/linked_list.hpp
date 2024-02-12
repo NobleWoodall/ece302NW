@@ -46,7 +46,10 @@ public:
 
 private:
 
-  //TODO
+Node<T>* node=nullptr; //why cant i use typename ItemCount
+Node<T>* head=nullptr;
+Node<T>* temp=nullptr;
+std::size_t listLength;
   
 };
 

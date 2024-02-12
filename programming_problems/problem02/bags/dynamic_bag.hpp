@@ -1,6 +1,6 @@
 #ifndef _DYNAMIC_BAG_HPP_
 #define _DYNAMIC_BAG_HPP_
-
+#include <iostream>
 #include "abstract_bag.hpp"
 
 template <typename T>
@@ -44,6 +44,9 @@ public:
   bool contains(const T& item) const;
 
 private:
+
+  int sizeBag;
+  T *items;
 
   // TODO
 };

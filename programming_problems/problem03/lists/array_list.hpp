@@ -46,7 +46,8 @@ public:
 
 private:
 
-  // TODO
+  T *list;
+  int sizeList;
   
 };
 
