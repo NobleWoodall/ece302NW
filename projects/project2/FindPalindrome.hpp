@@ -9,7 +9,11 @@ class FindPalindrome{
 private:
 	// private stuff that you define and implement goes here...
 	
-	// ...
+	std::vector<std::string> mystringVector;
+	int numPossible;
+	int numWords;
+	int numPalindromes;
+	std::vector<std::vector<std::string>> listPalindromes;
 	
 	// private stuff that you are given or is specified in the project
 	// description...
@@ -20,6 +24,8 @@ private:
 	    a grade of zero for the project. */
 	void recursiveFindPalindromes(std::vector<std::string> candidateStringVector, 
 			   	                  std::vector<std::string> currentStringVector);
+
+
 	
 	/** function to see if a string is a palindrome (provided).
 	  You may use the provided function, write your own, or use one of the billions
@@ -99,7 +105,6 @@ public:
 	    all current strings added to the FindPalindrome instance.
 	@return  A vector of vectors containing all palindromes. */
 	std::vector< std::vector<std::string> > toVector() const;
-
 };
 
 #endif
