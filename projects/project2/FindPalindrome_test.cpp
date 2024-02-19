@@ -4,11 +4,15 @@
 #include "FindPalindrome.hpp"
 
 // There should be at least one test per FindPalindrome method
-/*
-TEST_CASE("Test adding a non-allowable word", "[FindPalindrome]")
+
+TEST_CASE("Constructor", "[FindPalindrome]")
 {
 	FindPalindrome b;
-	REQUIRE(!b.add("kayak1"));
+	REQUIRE(b.number() == 0);
+}		
+TEST_CASE("Destructor", "[FindPalindrome]")
+{
+ //destructor doesnt do anything
 }
 
 TEST_CASE("test recursion", "[FindPalindrome]")
@@ -20,6 +24,33 @@ TEST_CASE("test recursion", "[FindPalindrome]")
 	REQUIRE(b.add("AaA"));
 	REQUIRE(b.number() == 6);
 }
+TEST_CASE("recursiveTest#1", "[FindPalindrome]")
+{
+	FindPalindrome b;
+	b.add("ate");
+	b.add("Owl");
+	b.add("Mr");
+	b.add("my");
+	b.add("worm");
+	b.add("metal");
+	REQUIRE(b.number()==1);
+}
+TEST_CASE("recursiveTest#2", "[FindPalindrome]")
+{
+	FindPalindrome b;
+	b.add("12");
+	REQUIRE(b.number()==0);
+}		
+TEST_CASE("recursiveTest N!", "[FindPalindrome]")
+{
+	FindPalindrome b;
+	REQUIRE(b.add("aAa"));
+	REQUIRE(b.add("AA"));
+	REQUIRE(b.add("aaaa"));
+	b.toVector();
+	REQUIRE(b.number()==6);
+	
+}	
 
 TEST_CASE("Test adding", "[FindPalindrome]")
 {
@@ -32,6 +63,34 @@ TEST_CASE("Test adding", "[FindPalindrome]")
 	REQUIRE(b.add("ajdcjkncsdjkncds"));
 	REQUIRE(!b.add("!ascasc"));
 }
+TEST_CASE("Test adding a non-allowable word", "[FindPalindrome]")
+{
+	FindPalindrome b;
+	REQUIRE(!b.add("kayak1"));
+}
+TEST_CASE("add vector")
+{
+	FindPalindrome b;
+	std::vector<std::string> v1,v2;
+	v1 = {"never", "odd"};
+	v2 = {"or", "even"};
+
+	b.add("never");
+	b.add("even");
+	b.add("odd");
+	b.add("or");
+
+	REQUIRE(b.number() == 1);
+}
+TEST_CASE("add vector invlaid")
+{
+	FindPalindrome b;
+	std::vector<std::string> v1,v2;
+	v1 = {"never", "odd"};
+	v2 = {"or", "jsdjkcnsdcd"};
+
+	REQUIRE(b.number() == 0);
+}
 
 TEST_CASE("CutTest1#1", "[FindPalindrome]")
 {
@@ -40,7 +99,6 @@ TEST_CASE("CutTest1#1", "[FindPalindrome]")
 	word = {"a"};
 	REQUIRE(b.cutTest1(word));
 }
-
 TEST_CASE("CutTest1#2", "[FindPalindrome]")
 {
 	FindPalindrome b;
@@ -48,7 +106,6 @@ TEST_CASE("CutTest1#2", "[FindPalindrome]")
 	word = {"ab"};
 	REQUIRE(!b.cutTest1(word));
 }
-
 TEST_CASE("CutTest1#3", "[FindPalindrome]")
 {
 	FindPalindrome b;
@@ -112,19 +169,6 @@ TEST_CASE("CutTest1#11", "[FindPalindrome]")
 	word = {"AaaA","vvavv"};
 	REQUIRE(b.cutTest1(word));
 }
-
-TEST_CASE("listPalindromes#1", "[FindPalindrome]")
-{
-	FindPalindrome b;
-	b.add("a");
-	b.add("AA");
-	b.add("AaA");
-	REQUIRE(b.cutTest1({"a","AA","AaA"}));
-
-	b.toVector();
-	
-}
-
 TEST_CASE("CutTest1#12", "[FindPalindrome]")
 {
 	FindPalindrome b;
@@ -132,55 +176,14 @@ TEST_CASE("CutTest1#12", "[FindPalindrome]")
 	word = {"AaaA","avava","WrWrW"};
 	REQUIRE(!b.cutTest1(word));
 }	
-TEST_CASE("recursiveTest#1", "[FindPalindrome]")
+TEST_CASE("CutTest1#13", "[FindPalindrome]")
 {
 	FindPalindrome b;
-	b.add("ate");
-	b.add("Owl");
-	b.add("Mr");
-	b.add("my");
-	b.add("worm");
-	b.add("metal");
-	REQUIRE(b.number()==1);
-}
-TEST_CASE("recursiveTest#2", "[FindPalindrome]")
-{
-	FindPalindrome b;
-	b.add("12");
-	REQUIRE(b.number()==0);
-}		
-TEST_CASE("recursiveTest N!", "[FindPalindrome]")
-{
-	FindPalindrome b;
-	b.add("aAa");
-	b.add("AAA");
-	b.add("aaa");
-	REQUIRE(b.number()==6);
+	std::vector<std::string> word;
+	word = {"a","Aaa"};
+	REQUIRE(b.cutTest1(word));
 }	
 
-TEST_CASE("Constructor", "[FindPalindrome]")
-{
-	FindPalindrome b;
-	REQUIRE(b.number() == 0);
-}		
-TEST_CASE("Number Test", "[FindPalindrome]")
-{
-	FindPalindrome b;
-	REQUIRE(b.number() == 0);
-	b.add("aaa");
-	b.add("AAA");
-	REQUIRE(b.number()==2);
-}
-TEST_CASE("Clear Test", "[FindPalindrome]")
-{
-	FindPalindrome b;
-	b.add("aaaa");
-	b.add("AAAA");
-	b.add("1234");
-	b.clear();
-	REQUIRE(b.number()==0);
-}
-*/
 TEST_CASE("Cut Test 2", "[FindPalindrome]")
 {
 	FindPalindrome b;
@@ -217,7 +220,7 @@ TEST_CASE("Cut Test 2 #4 invalid", "[FindPalindrome]")
 	
 	REQUIRE(!b.cutTest2(v1,v2));
 }
-TEST_CASE("Cut Test 2 #5 invalid", "[FindPalindrome]")
+TEST_CASE("Cut Test 2 #5 ", "[FindPalindrome]")
 {
 	FindPalindrome b;
 	std::vector<std::string> v1,v2;
@@ -225,4 +228,36 @@ TEST_CASE("Cut Test 2 #5 invalid", "[FindPalindrome]")
 	v2 = {"or", "even"};
 	
 	REQUIRE(b.cutTest2(v1,v2));
+}
+
+TEST_CASE("Number Test", "[FindPalindrome]")
+{
+	FindPalindrome b;
+	REQUIRE(b.number() == 0);
+	b.add("aaa");
+	b.add("AA");
+	REQUIRE(b.number()==2);
+}
+//Note number test was tested a bunch withn other tests
+
+TEST_CASE("Clear Test", "[FindPalindrome]")
+{
+	FindPalindrome b;
+	b.add("aaaa");
+	b.add("AAAA");
+	b.add("1234");
+	b.clear();
+	REQUIRE(b.number()==0);
+}
+
+TEST_CASE("toVector#1", "[FindPalindrome]")
+{
+	FindPalindrome b;
+	b.add("a");
+	b.add("AA");
+	b.add("AaA");
+	REQUIRE(b.cutTest1({"a","AA","AaA"}));
+
+	b.toVector();
+	
 }

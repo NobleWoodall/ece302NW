@@ -46,7 +46,6 @@ void FindPalindrome::recursiveFindPalindromes(vector<string> candidateStringVect
 			candidateComb += candidate;
 		}
 
-		cout<<candidateComb<<endl;
 
 		if (isPalindrome(candidateComb))
 		{
@@ -138,7 +137,7 @@ bool FindPalindrome::cutTest1(const vector<string> &stringVector)
 
 	for (int i = 0; i < stringConcatenated.length(); i++)
 	{
-		unsigned char ch = stringConcatenated[i]; // make sure the range is 0-256 and not negative
+		unsigned char ch = tolower(stringConcatenated[i]); // make sure the range is 0-256 and not negative
 		// increments the spot that holds the cahracter
 		// ex. a = 97 in ASCII so charCount[97] == 1
 		charCount[ch]++;
@@ -345,7 +344,7 @@ bool FindPalindrome::add(const vector<string> &stringVector)
 
 vector<vector<string>> FindPalindrome::toVector() const
 {
-	//printVectorOfVector(listPalindromes);
+	printVectorOfVector(listPalindromes);
 
 	return listPalindromes;
 }
