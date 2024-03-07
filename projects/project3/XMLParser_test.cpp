@@ -8,6 +8,32 @@ using namespace std;
 
 // TODO Implement tests of your Stack class and XMLParser class here
 
+
+
+
+
+
+TEST_CASE( "Test Stack", "[ADT Stack]" )
+{
+	   INFO("Hint: testing Stack");
+		// Create a Stack to hold ints
+		Stack<int> intStack;
+		REQUIRE(intStack.size() == 0);
+
+		intStack.push(1);
+		intStack.push(1);
+		intStack.push(1);
+		intStack.push(1);
+
+		REQUIRE(intStack.size() == 4);
+
+		intStack.clear();
+
+		REQUIRE(intStack.size() == 0);
+
+}
+
+
 TEST_CASE( "Test Bag add", "[ADT Bag]" )
 {
 	   INFO("Hint: testing Bag add()");
@@ -30,6 +56,10 @@ TEST_CASE( "Test Stack push and size", "[ADT Stack]" )
 	   INFO("Hint: testing Stack push()");
 		// Create a Stack to hold ints
 		Stack<int> intStack;
+
+		REQUIRE(intStack.size() == 0);
+
+
 		int testSize = 3;
 		int stackSize;
 		bool success;
@@ -39,15 +69,18 @@ TEST_CASE( "Test Stack push and size", "[ADT Stack]" )
 			stackSize = intStack.size();
 			success = (stackSize == (i+1));
 			REQUIRE(success);
+
 		}
+
 }
+
 
 TEST_CASE( "Test XMLParser tokenizeInputString", "[XMLParser]" )
 {
 	   INFO("Hint: tokenize single element test of XMLParse");
 		// Create an instance of XMLParse
 		XMLParser myXMLParser;
-		string testString = "<test>stuff</test>";
+		string testString = "<te st>stuff</test>";
 		bool success;
 		success = myXMLParser.tokenizeInputString(testString);
 		REQUIRE(success);
@@ -69,37 +102,37 @@ TEST_CASE( "Test Stack handout-0", "[XMLParser]" )
 		}
 		for (int i = testSize-1; i>=0; i--) {
 			REQUIRE(intStack.isEmpty() == false);
-            int elem = intStack.peek();
+			int elem = intStack.peek();
 			REQUIRE(elem == i);
-            REQUIRE(intStack.isEmpty() == false);
+			REQUIRE(intStack.isEmpty() == false);
 			intStack.pop();
 		}
-        REQUIRE(intStack.isEmpty() == true);
+		REQUIRE(intStack.isEmpty() == true);
 }
 
 TEST_CASE( "Test Stack handout-1", "[XMLParser]" )
 {
 	   Stack<char> charStack;
-       std::string s("Hello world");
-       int i = 1;
-       for (auto c:s) {
-           charStack.push(c);
-           REQUIRE(charStack.size() == i);
-           i++;
-       }
-       for (i = 0; i < 5; i++) {
-           REQUIRE(charStack.isEmpty() == false);
-           char c = charStack.peek();
-           REQUIRE(c == s[s.length()-1-i]);
-           REQUIRE(charStack.isEmpty() == false);
-           charStack.pop();
-       }
-       REQUIRE(charStack.size() == 6);
-       charStack.clear();
-       REQUIRE(charStack.isEmpty() == true);      
+	   std::string s("Hello world");
+	   int i = 1;
+	   for (auto c:s) {
+		   charStack.push(c);
+		   REQUIRE(charStack.size() == i);
+		   i++;
+	   }
+	   for (i = 0; i < 5; i++) {
+		   REQUIRE(charStack.isEmpty() == false);
+		   char c = charStack.peek();
+		   REQUIRE(c == s[s.length()-1-i]);
+		   REQUIRE(charStack.isEmpty() == false);
+		   charStack.pop();
+	   }
+	   REQUIRE(charStack.size() == 6);
+	   charStack.clear();
+	   REQUIRE(charStack.isEmpty() == true);
 }
 
-// You can assume that the beginning and the end of CONTENT will not be filled with whitespace
+ //You can assume that the beginning and the end of CONTENT will not be filled with whitespace
 TEST_CASE( "Test XMLParser tokenizeInputString Handout-0", "[XMLParser]" )
 {
 	   INFO("Hint: tokenize single element test of XMLParse");
@@ -144,9 +177,12 @@ TEST_CASE( "Test XMLParser tokenizeInputString Handout-1", "[XMLParser]" )
 		REQUIRE(result.size() == output.size());
 		for (int i = 0; i < result.size(); i++) {
 			REQUIRE(result[i].tokenType == output[i].tokenType);
+			cout<<result[i].tokenString<<endl;
+			cout<<output[i].tokenString<<endl;
 			REQUIRE(result[i].tokenString.compare(output[i].tokenString) == 0);
 		}
 }
+
 
 TEST_CASE( "Test XMLParser parseTokenizedInput Handout-0", "[XMLParser]" )
 {
@@ -173,29 +209,36 @@ TEST_CASE( "Test XMLParser parseTokenizedInput Handout-0", "[XMLParser]" )
 		}
 }
 
-TEST_CASE( "Test XMLParser Final Handout-0", "[XMLParser]" )
-{
-	   INFO("Hint: TestFile");
-		// Create an instance of XMLParse
-		XMLParser myXMLParser;
-		ifstream myfile ("./TestFile.txt");
-		std::string inputString((std::istreambuf_iterator<char>(myfile) ), (std::istreambuf_iterator<char>()) );
 
-		bool success;
-		success = myXMLParser.tokenizeInputString(inputString);
-		REQUIRE(success);
-		success = myXMLParser.parseTokenizedInput();
-		REQUIRE(success);
-		REQUIRE(myXMLParser.containsElementName("catalog"));
-		REQUIRE(myXMLParser.frequencyElementName("catalog") == 1);
-		REQUIRE(myXMLParser.containsElementName("product"));
-		REQUIRE(myXMLParser.frequencyElementName("product") == 1);
-		REQUIRE(myXMLParser.containsElementName("catalog_item"));
-		REQUIRE(myXMLParser.frequencyElementName("catalog_item") == 2);
-		REQUIRE(myXMLParser.containsElementName("item_number"));
-		REQUIRE(myXMLParser.frequencyElementName("item_number") == 2);
-		REQUIRE(myXMLParser.containsElementName("size"));
-		REQUIRE(myXMLParser.frequencyElementName("size") == 6);
-		REQUIRE(myXMLParser.containsElementName("color_swatch"));
-		REQUIRE(myXMLParser.frequencyElementName("color_swatch") == 15);
+TEST_CASE("Test XMLParser Final Handout-0", "[XMLParser]")
+{
+	INFO("Hint: TestFile");
+	// Create an instance of XMLParse
+	XMLParser myXMLParser;
+	ifstream myfile("./TestFile.txt");
+	std::string inputString((std::istreambuf_iterator<char>(myfile)), (std::istreambuf_iterator<char>()));
+	bool success;
+
+	success = myXMLParser.tokenizeInputString(inputString);
+
+//	cout << inputString;
+	REQUIRE(success);
+
+
+	success = myXMLParser.parseTokenizedInput();
+	REQUIRE(success);
+
+	REQUIRE(myXMLParser.containsElementName("catalog"));
+	REQUIRE(myXMLParser.frequencyElementName("catalog") == 1);
+	REQUIRE(myXMLParser.containsElementName("product"));
+	REQUIRE(myXMLParser.frequencyElementName("product") == 1);
+	REQUIRE(myXMLParser.containsElementName("catalog_item"));
+	REQUIRE(myXMLParser.frequencyElementName("catalog_item") == 2);
+	REQUIRE(myXMLParser.containsElementName("item_number"));
+	REQUIRE(myXMLParser.frequencyElementName("item_number") == 2);
+	REQUIRE(myXMLParser.containsElementName("size"));
+	REQUIRE(myXMLParser.frequencyElementName("size") == 6);
+	REQUIRE(myXMLParser.containsElementName("color_swatch"));
+	REQUIRE(myXMLParser.frequencyElementName("color_swatch") == 15);
+	
 }

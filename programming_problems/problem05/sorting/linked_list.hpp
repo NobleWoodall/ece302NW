@@ -21,7 +21,6 @@ public:
   // copy assignment
   LinkedList& operator=(LinkedList x);
 
-  // swap
   void swap(LinkedList& x);
   
   // determine if a list is empty
@@ -47,7 +46,10 @@ public:
 
 private:
 
-  //TODO
+Node<T>* node=nullptr; //why cant i use typename ItemCount
+Node<T>* head=nullptr;
+Node<T>* temp=nullptr;
+std::size_t listLength;
   
 };
 

@@ -25,7 +25,7 @@ private:
 	/** Bag to store the XML element names. Uses the book's Bag implementation. */
 	Bag<std::string>* elementNameBag;
 	/** Stack to store XML tag names while parsing. Uses your stack implementation. */
-	Stack<std::string>* parseStack;
+	Stack<std::string>* stackStack;
 	/** Vector to store the tokenized input string and the token types */
 	std::vector<TokenStruct> tokenizedInputVector;
   
@@ -35,6 +35,8 @@ public:
 	/** The class constructor.
 		@post  Creates an instance of the class that can be used to tokenize and parse an input string . */
 	XMLParser();
+
+
 	/** Scans and tokenizes the input string into XML markup and content. Returns true if all markup (tokens) 
 	    in the input string are valid. Valid markup (tokens) are the characters included in a '<' '>' character 
 		delimiter pair. The delimiter pairs may not be nested, and the first delimiter in the input string
@@ -44,6 +46,8 @@ public:
 		@param inputString  The input string.
 		@return  true if tokenization was successful, or false if not. */
 	bool tokenizeInputString(const std::string &inputString);
+
+
 	/** Parses a valid tokenized string (stored internally after a successful call to tokenizeInputString)
 	    and returns true if the tokenized input is valid XML.  Valid XML satisfies the BPG discussed 
 		in the Project Description, where open braces are replaced with a start tag, 
@@ -59,6 +63,8 @@ public:
 		@param None.
 		@return True if the tokenized string is valid XML, or false if not. */
 	bool parseTokenizedInput();
+
+
 	/** Empties and then fills a given vector with the tokenized input string. This
 	    method returns a vector whether or not the tokenized input string was valid XML or not.
 	    The vector elements are of type TokenStruct. This data type has two fields,
@@ -69,6 +75,8 @@ public:
 	    include the '<', '>', "<?", "?>", "</", and "/>" delimiters.
 		@return  A vector containing all the tokenized input as a vector of type "TokenStruct". */
 	std::vector<TokenStruct> returnTokenizedInput() const;
+
+
 	/** Determines if an element name is contained in valid XML input string.
 	    Only finds element names if both the tokenizeInputString() and
 		parseTokenizedInput() methods have returned true; throws a logic_error otherwise.
@@ -77,6 +85,8 @@ public:
 		@return True if the element name is in the valid XML, or false if not. 
 		@throws std::logic_error if input has not been both tokenized and parsed */
 	bool containsElementName(const std::string &inputString) const;
+
+
 	/** Returns the number of times an element name is contained in valid XML input string.
 	    Only returns non-zero frequencies if both the tokenizeInputString() and
 		parseTokenizedInput() methods have returned true; throws a logic_error otherwise.
@@ -85,9 +95,13 @@ public:
 		@return An int representing the frequency of the element name in the valid XML string. 
 		@throws std::logic_error if input has not been both tokenized and parsed */
 	int frequencyElementName(const std::string &inputString) const;
+
+
 	/** Clears the internal data structures for a instance of the class.
 	    @post  The class instance can be used to tokenize a new input string. */
 	void clear();
+
+	
 	/** The class destructor. Must free all allocated memory. */
 	~XMLParser();
 }; // end XMLParser

@@ -36,16 +36,21 @@ static void convertToLowerCase(string &value)
 // private recursive function. Must use this signature!
 void FindPalindrome::recursiveFindPalindromes(vector<string> candidateStringVector, vector<string> currentStringVector)
 {
-	
+
+	if (!cutTest2(candidateStringVector, currentStringVector))
+	{
+		return;
+	}
+
 	if (currentStringVector.empty())
 	{
 		// Base case: concatenate candidate strings and check if it's a palindrome
 		string candidateComb;
+
 		for (const string &candidate : candidateStringVector)
 		{
 			candidateComb += candidate;
 		}
-
 
 		if (isPalindrome(candidateComb))
 		{
@@ -98,7 +103,7 @@ FindPalindrome::FindPalindrome()
 	mystringVector.resize(0);
 	listPalindromes.resize(0);
 	numWords = 0;
-	numPossible = 0; 
+	numPossible = 0;
 	numPalindromes = 0;
 }
 
@@ -192,15 +197,17 @@ bool FindPalindrome::cutTest2(const vector<string> &stringVector1,
 {
 	int charCount1[256] = {0};
 	int charCount2[256] = {0};
-		
+
 	vector<string> shorter = stringVector1;
 	vector<string> longer = stringVector2;
 
-	if(stringVector1.size()<stringVector2.size()){
-		 shorter = stringVector1;
+	if (stringVector1.size() < stringVector2.size())
+	{
+		shorter = stringVector1;
 		longer = stringVector2;
 	}
-	else{
+	else
+	{
 		shorter = stringVector2;
 		longer = stringVector1;
 	}
@@ -225,7 +232,6 @@ bool FindPalindrome::cutTest2(const vector<string> &stringVector1,
 		}
 	}
 
-	
 	for (int i = 0; i < 256; i++)
 	{
 		if (charCount1[i] > charCount2[i])
@@ -239,6 +245,8 @@ bool FindPalindrome::cutTest2(const vector<string> &stringVector1,
 
 bool FindPalindrome::add(const string &value)
 {
+
+
 	// Check if the value contains only alphabetical characters
 	for (int i = 0; i < value.length(); i++)
 	{
@@ -289,6 +297,10 @@ bool FindPalindrome::add(const string &value)
 	numPalindromes = 0;
 	listPalindromes.clear();
 	listPalindromes.resize(0);
+	if (!cutTest1(mystringVector))
+	{
+		return false;
+	}
 	recursiveFindPalindromes(temp3, mystringVector);
 
 	return true;
@@ -296,10 +308,14 @@ bool FindPalindrome::add(const string &value)
 
 bool FindPalindrome::add(const vector<string> &stringVector)
 {
-
-	for (int i = 0; i < stringVector.size(); i++)    
+	if (!cutTest1(stringVector))
 	{
-		string tempString = stringVector[i]; //gets the first word of string vector
+		return false;
+	}
+
+	for (int i = 0; i < stringVector.size(); i++)
+	{
+		string tempString = stringVector[i]; // gets the first word of string vector
 		int tempStringSize = tempString.length();
 
 		for (int j = 0; j < tempStringSize; j++)
@@ -310,22 +326,24 @@ bool FindPalindrome::add(const vector<string> &stringVector)
 			}
 		}
 
-		string tempString2 = tempString; //copies tempString into tempString 2 to preserve case
+		string tempString2 = tempString; // copies tempString into tempString 2 to preserve case
 		convertToLowerCase(tempString2);
 
-		for(int k =0; k<mystringVector.size();k++){ //compares all of my string Vector's words with one word from the passed in vector
+		for (int k = 0; k < mystringVector.size(); k++)
+		{ // compares all of my string Vector's words with one word from the passed in vector
 
-			string tempString3 = mystringVector[k]; //gets the first word of my string VEctor
+			string tempString3 = mystringVector[k]; // gets the first word of my string VEctor
 			convertToLowerCase(tempString3);
 
-			if(tempString2 == tempString3){
+			if (tempString2 == tempString3)
+			{
 				return false;
 			}
-
 		}
 
-		mystringVector.push_back(tempString); //if the words don't match and arent non alphabetic add it onto the string			
+		mystringVector.push_back(tempString); // if the words don't match and arent non alphabetic add it onto the string
 	}
+
 	/*
 	if (!cutTest1(stringVector))
 	{

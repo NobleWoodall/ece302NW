@@ -1,7 +1,3 @@
-//  Adapted from Frank M. Carrano and Timothy M. Henry.
-
-/** @file Node.cpp */
-
 #include <cstddef>
 #include "Node.hpp"
 
