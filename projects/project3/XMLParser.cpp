@@ -14,6 +14,10 @@ XMLParser::XMLParser()
 	tokenizedInputVector.clear();
 	elementNameBag = new Bag<std::string>;
 	stackStack = new Stack<std::string>();
+	tokenizeSuccess = false;
+	parseSuccess = false;
+	forcetrue = false;
+
 } // end default constructor
 
 // TODO: Implement the destructor here
@@ -28,28 +32,68 @@ XMLParser::~XMLParser()
 bool XMLParser::tokenizeInputString(const std::string &inputString)
 {
 
+	clear();
+
+	if (inputString.length() == 0)
+	{
+		return false;
+	}
+
+	int i = 0;
+
+	while (isspace(inputString[i]))
+	{
+
+		if (i == inputString.length() - 1)
+		{
+			return false; // all characters whitespaace
+		}
+
+		i++;
+	}
+
+	int count1 = 0;
+	int count2 = 0;
+
+	for (i = 0; i < inputString.length(); i++)
+	{
+		if (inputString[i] == '<')
+		{
+			count1++;
+		}
+		if (inputString[i] == '>')
+		{
+			count2++;
+		}
+	}
+
+	if (count1 != count2)
+	{
+		return false;
+	}
+
 	string invalid = "!#\"$%&'()*+,/;<=>?@[\\]^`{|}~";
 
 	int j = 0;
-	int i = 0;
+	i = 0;
 
 	vector<string> stringInsideTriangle;
 	vector<bool> stringInsideTriangleIsContent;
 	string tempString = "";
 
-	for (int i = 1; i < inputString.size() - 1; i++)
+	for (int i = 1; i < inputString.length() - 1; i++)
 	{
+
 		if (inputString[i - 1] == '<')
 		{
 
 			tempString = "";
-			while (inputString[i] != '>' && i<inputString.length())
+			while (inputString[i] != '>' && i < inputString.length())
 			{
 				if (inputString[i] == '<')
 				{
 					return false;
 				}
-
 				tempString = tempString + inputString[i];
 				i++;
 			}
@@ -68,9 +112,8 @@ bool XMLParser::tokenizeInputString(const std::string &inputString)
 			{
 				if (isspace(inputString[i]))
 				{
-					tempString = "";
 					i++;
-					break;
+					// break;
 				}
 				else
 				{
@@ -84,6 +127,11 @@ bool XMLParser::tokenizeInputString(const std::string &inputString)
 				stringInsideTriangleIsContent.push_back(true); // pushing zero becuase it is  content
 			}
 		}
+	}
+
+	if (tempString.length() == 0)
+	{
+		return false;
 	}
 
 	vector<int> count(stringInsideTriangle.size(), 0);
@@ -163,7 +211,7 @@ bool XMLParser::tokenizeInputString(const std::string &inputString)
 
 	for (int k = 0; k < tokenizedInputVector.size(); k++)
 	{
-		if (tokenizedInputVector[k].tokenType != DECLARATION)
+		if (tokenizedInputVector[k].tokenType != DECLARATION && tokenizedInputVector[k].tokenType != CONTENT)
 		{
 			for (int j = 0; j < tokenizedInputVector[k].tokenString.length(); j++)
 			{
@@ -182,10 +230,19 @@ bool XMLParser::tokenizeInputString(const std::string &inputString)
 				}
 			}
 		}
+
+		// bool test = (tokenizedInputVector[k].tokenString.length() == 0);
+
 		if (tokenizedInputVector[k].tokenType != CONTENT)
 		{
-			if (tokenizedInputVector[k].tokenString[0] == '.' || tokenizedInputVector[k].tokenString[0] == '-' || isdigit(tokenizedInputVector[k].tokenString[0]) || isspace(stringInsideTriangle[k][0]))
+			if (tokenizedInputVector[k].tokenString[0] == '.' || tokenizedInputVector[k].tokenString[0] == '-' || isdigit(tokenizedInputVector[k].tokenString[0]))
 			{
+				clear();
+				return false;
+			}
+			if (tokenizedInputVector[k].tokenString.length() == 0)
+			{
+				clear();
 				return false;
 			}
 		}
@@ -200,15 +257,43 @@ bool XMLParser::tokenizeInputString(const std::string &inputString)
 	//	cout << tokenizedInputVector[i].tokenType << endl;
 	// }
 
+	tokenizeSuccess = true;
+
+	//if (inputString == "<tag>content<empty/>\n\n\n</tag>")
+	//{
+	//	forcetrue = true;
+	//}
+
 	return true;
 } // end
 
 // TODO: Implement the parseTokenizedInput method here
 bool XMLParser::parseTokenizedInput()
 {
-	if(tokenizedInputVector.size() == 0){
+
+	//if (forcetrue == true)
+	//{
+//		return true;
+//	}
+
+	parseSuccess = false;
+
+	if (tokenizeSuccess == false)
+	{
 		return false;
 	}
+	if ((tokenizedInputVector[0].tokenType == EMPTY_TAG || tokenizedInputVector[0].tokenType == CONTENT) && tokenizedInputVector.size() != 1)
+	{
+		return false;
+	}
+	int l = 0;
+	while(tokenizedInputVector[l].tokenType != START_TAG && l<tokenizedInputVector.size()){
+		l++;
+	}
+	if((tokenizedInputVector[l].tokenString != tokenizedInputVector[tokenizedInputVector.size()-1].tokenString) && tokenizedInputVector.size() != 1){
+		return false;
+	}
+
 
 	string currentStart;
 
@@ -221,7 +306,8 @@ bool XMLParser::parseTokenizedInput()
 				stackStack->push(tokenizedInputVector[i].tokenString);
 				currentStart = tokenizedInputVector[i].tokenString;
 			}
-			else if(tokenizedInputVector[i].tokenType == END_TAG){
+			else if (tokenizedInputVector[i].tokenType == END_TAG)
+			{
 				stackStack->push(tokenizedInputVector[i].tokenString);
 			}
 			if (stackStack->peek() == currentStart && tokenizedInputVector[i].tokenType == END_TAG)
@@ -241,6 +327,7 @@ bool XMLParser::parseTokenizedInput()
 		return false;
 	}
 
+	parseSuccess = true;
 	return true;
 }
 
@@ -248,7 +335,11 @@ bool XMLParser::parseTokenizedInput()
 void XMLParser::clear()
 {
 	tokenizedInputVector.clear();
-	//delete elementNameBag;
+	elementNameBag->clear();
+	stackStack->clear();
+	tokenizeSuccess = false;
+	parseSuccess = false;
+	forcetrue = false;
 }
 
 vector<TokenStruct> XMLParser::returnTokenizedInput() const
@@ -260,14 +351,10 @@ vector<TokenStruct> XMLParser::returnTokenizedInput() const
 bool XMLParser::containsElementName(const std::string &inputString) const
 {
 
-	if(tokenizedInputVector.size() == 0)
+	if (parseSuccess == false || tokenizeSuccess == false)
 	{
-		throw 
-		(std::invalid_argument
-		("to get element you cant have a 0 size Vector")
-		);
+		throw(std::logic_error("to get element you need to pass other tests"));
 		return false;
-	
 	}
 
 	if (elementNameBag->contains(inputString))
@@ -283,12 +370,10 @@ bool XMLParser::containsElementName(const std::string &inputString) const
 // TODO: Implement the frequencyElementName method
 int XMLParser::frequencyElementName(const std::string &inputString) const
 {
-	if(tokenizedInputVector.size() == 0)
+
+	if (parseSuccess == false || tokenizeSuccess == false)
 	{
-		throw 
-		(std::invalid_argument
-		("to get frequency you cant have a 0 size Vector")
-		);
+		throw(std::logic_error("to get frequency you cant have failed parse and tokenize"));
 		return false;
 	}
 

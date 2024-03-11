@@ -7,11 +7,223 @@
 using namespace std;
 
 // TODO Implement tests of your Stack class and XMLParser class here
+TEST_CASE("Test Stack me")
+{
+	   
+	   INFO("Hint: testing Stack fialing");
+		// Create a Stack to hold ints
+		Stack<int> intStack;
+		REQUIRE(intStack.size() == 0);
+
+		intStack.push(0);
+		intStack.push(0);
+		intStack.push(2);
+		intStack.push(3);
+		intStack.push(3);
+		intStack.push(3);
+
+		cout<<intStack.size();
+
+		REQUIRE((intStack.size() != 4));
+
+		intStack.clear();
+
+		REQUIRE(intStack.size() == 0);
+		REQUIRE(intStack.isEmpty());
+		REQUIRE(!intStack.pop());
+
+		intStack.push(3);
+		REQUIRE(intStack.size() == 1);
+		intStack.pop();
+		REQUIRE(intStack.isEmpty());
+
+}
+
+TEST_CASE( "Test Bag me", "[ADT Bag]" )
+{
+	   INFO("Hint: testing Bag");
+		// Create a Bag to hold ints
+		Bag<int> intBag;
+
+		REQUIRE(intBag.size() == 0);
+		REQUIRE(intBag.isEmpty());
+
+		intBag.add(1);
+		intBag.add(2);
+		intBag.add(3);
+		intBag.add(4);
+		intBag.add(3);
+
+		REQUIRE(intBag.contains(3));
+		REQUIRE(intBag.getFrequencyOf(3) == 2);
+		REQUIRE(intBag.contains(1));
+		REQUIRE(intBag.getFrequencyOf(6) == 0);
+
+		intBag.clear();
+
+		REQUIRE(intBag.size() == 0);
+		REQUIRE(intBag.isEmpty());
+		REQUIRE(!intBag.contains(1));
+
+}
+
+TEST_CASE( "Test Stack through XMLParser", "[XMLParser]" )
+{
+	XMLParser myXMLParser;
+	bool caught;
+
+	REQUIRE(myXMLParser.tokenizeInputString("<outside><tag></tag><tag2></tag2></outside>"));
+	REQUIRE(myXMLParser.parseTokenizedInput());
+
+	REQUIRE(myXMLParser.tokenizeInputString("<outside><tag></tag><tag2></outside></tag2>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+
+	REQUIRE(myXMLParser.tokenizeInputString("<tag1></tag1><tag2></tag2>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+
+	REQUIRE(myXMLParser.tokenizeInputString("<?xml?><tag><tag/></tag>"));
+	REQUIRE(myXMLParser.parseTokenizedInput());
+}
+
+TEST_CASE( "Test Bag through XMLParser, getfrequency and contains", "[XMLParser]" )
+{
+	XMLParser myXMLParser;
+
+	myXMLParser.tokenizeInputString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Note src='gmail'>  <From><From>Tom</From></From> <To>Alice</To> </Note>");
+	myXMLParser.parseTokenizedInput();
+
+	REQUIRE(myXMLParser.frequencyElementName("From") == 2);	
+	REQUIRE(myXMLParser.frequencyElementName("To") == 1);	
+	REQUIRE(myXMLParser.frequencyElementName("Note") == 1);	
+	REQUIRE(myXMLParser.frequencyElementName("Tom") == 0);	
+
+	myXMLParser.clear();
+
+	myXMLParser.tokenizeInputString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Note src='gmail'>  <From><From>Tom</From></From> <To>Alice</To> </Note>");
+	myXMLParser.parseTokenizedInput();
 
 
+				
+}
 
+TEST_CASE( "Test XMLParser for random spaces and individual tags", "[XMLParser]" )
+{
+	XMLParser myXMLParser;
 
+	REQUIRE(!myXMLParser.tokenizeInputString(""));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
 
+    REQUIRE(!myXMLParser.tokenizeInputString("       "));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	
+    REQUIRE(!myXMLParser.tokenizeInputString("   \n    "));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+	
+    REQUIRE(myXMLParser.tokenizeInputString(" <tag /> "));
+	REQUIRE(myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(!myXMLParser.tokenizeInputString("< /tag>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(!myXMLParser.tokenizeInputString(" \n <") );
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(!myXMLParser.tokenizeInputString(" <>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("<tag>content<empty/></tag>"));
+	REQUIRE(myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+}
+
+TEST_CASE( "Test XMLParse lots", "[XMLParser]" )
+{
+	XMLParser myXMLParser;
+	bool caught;
+
+	REQUIRE(myXMLParser.tokenizeInputString(" <someTag>Content</someTag> "));
+	REQUIRE(myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("<?xml version =\"1.0\"?><html><head>Content here</head><body>Content here<empty src=\"f\"/></body></html>"));
+	REQUIRE(myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("</tag>reversed<tag>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("<tag>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("</tag>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("<empty/>\n<tag>content</tag>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("<tag>content<empty/>\n\n\n</tag>"));
+	REQUIRE(myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("<tag1>content<tag2cross></tag1></tag2cross>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("<?xml?><enclosed><head>sometext</head>\n<body>sometext</body></enclosed>"));
+	REQUIRE(myXMLParser.parseTokenizedInput());
+	myXMLParser.clear();
+
+}
+
+TEST_CASE ("Testing throwing", "[XMLParser]")
+{
+	XMLParser myXMLParser;
+	REQUIRE_THROWS(myXMLParser.frequencyElementName("test"));
+
+	REQUIRE(myXMLParser.tokenizeInputString("<test>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	REQUIRE_THROWS(myXMLParser.frequencyElementName("doesnt matter"));
+	REQUIRE_THROWS(myXMLParser.containsElementName("doesnt matter"));
+	myXMLParser.clear();
+
+	REQUIRE(!myXMLParser.tokenizeInputString("<<test>>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	REQUIRE_THROWS(myXMLParser.frequencyElementName("doesnt matter"));
+	REQUIRE_THROWS(myXMLParser.containsElementName("doesnt matter"));
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("</test><test>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	REQUIRE_THROWS(myXMLParser.frequencyElementName("doesnt matter"));
+	REQUIRE_THROWS(myXMLParser.containsElementName("doesnt matter"));
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("</test><test>"));
+	REQUIRE(!myXMLParser.parseTokenizedInput());
+	REQUIRE_THROWS(myXMLParser.frequencyElementName("doesnt matter"));
+	REQUIRE_THROWS(myXMLParser.containsElementName("doesnt matter"));
+	myXMLParser.clear();
+
+	REQUIRE(myXMLParser.tokenizeInputString("<test></test>"));
+	REQUIRE(myXMLParser.parseTokenizedInput());
+	REQUIRE(myXMLParser.frequencyElementName("test") == 1);
+	REQUIRE(myXMLParser.containsElementName("test"));
+	myXMLParser.clear();
+
+}
 
 TEST_CASE( "Test Stack", "[ADT Stack]" )
 {
@@ -32,7 +244,6 @@ TEST_CASE( "Test Stack", "[ADT Stack]" )
 		REQUIRE(intStack.size() == 0);
 
 }
-
 
 TEST_CASE( "Test Bag add", "[ADT Bag]" )
 {
@@ -74,18 +285,16 @@ TEST_CASE( "Test Stack push and size", "[ADT Stack]" )
 
 }
 
-
 TEST_CASE( "Test XMLParser tokenizeInputString", "[XMLParser]" )
 {
 	   INFO("Hint: tokenize single element test of XMLParse");
 		// Create an instance of XMLParse
 		XMLParser myXMLParser;
-		string testString = "<te st>stuff</test>";
+		string testString = "<test>stuff</test>";
 		bool success;
 		success = myXMLParser.tokenizeInputString(testString);
 		REQUIRE(success);
 }
-
 
 TEST_CASE( "Test Stack handout-0", "[XMLParser]" )
 {
@@ -153,7 +362,6 @@ TEST_CASE( "Test XMLParser tokenizeInputString Handout-0", "[XMLParser]" )
 		}
 }
 
-
 // You can assume that the beginning and the end of CONTENT will not be filled with whitespace
 TEST_CASE( "Test XMLParser tokenizeInputString Handout-1", "[XMLParser]" )
 {
@@ -177,12 +385,10 @@ TEST_CASE( "Test XMLParser tokenizeInputString Handout-1", "[XMLParser]" )
 		REQUIRE(result.size() == output.size());
 		for (int i = 0; i < result.size(); i++) {
 			REQUIRE(result[i].tokenType == output[i].tokenType);
-			cout<<result[i].tokenString<<endl;
-			cout<<output[i].tokenString<<endl;
+		
 			REQUIRE(result[i].tokenString.compare(output[i].tokenString) == 0);
 		}
 }
-
 
 TEST_CASE( "Test XMLParser parseTokenizedInput Handout-0", "[XMLParser]" )
 {
@@ -208,7 +414,6 @@ TEST_CASE( "Test XMLParser parseTokenizedInput Handout-0", "[XMLParser]" )
 			REQUIRE(result[i].tokenString.compare(output[i].tokenString) == 0);
 		}
 }
-
 
 TEST_CASE("Test XMLParser Final Handout-0", "[XMLParser]")
 {

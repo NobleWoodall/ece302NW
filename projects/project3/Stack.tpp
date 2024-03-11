@@ -2,6 +2,7 @@
 #include <cstddef>
 #include "Stack.hpp"
 #include "Node.hpp"
+#include <memory>
 
 // TODO: Implement the constructor here
 template <class ItemType>
@@ -15,23 +16,14 @@ Stack<ItemType>::Stack()
 template <class ItemType>
 Stack<ItemType>::~Stack()
 {
-	clear(); // clear deals with memory
-	//delete headPtr;
-
+//smart pointer
 } // end destructor
 
 // TODO: Implement the isEmpty method here
 template <class ItemType>
 bool Stack<ItemType>::isEmpty() const
 {
-	if (currentSize == 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return (currentSize == 0);
 } // end isEmpty
 
 // TODO: Implement the size method here
@@ -52,25 +44,8 @@ template <class ItemType>
 bool Stack<ItemType>::push(const ItemType &newItem)
 {
 
-	Node<ItemType> *pushNode = new Node<ItemType>(newItem);
-	if (pushNode == nullptr)
-	{
-		return false; // Memory allocation failed
-	}
-
-	if (headPtr == nullptr)
-	{
-		// If the stack is empty, set pushNode as the new head
-		headPtr = pushNode;
-	}
-	else
-	{
-		// If the stack is not empty, set the next pointer of pushNode to the current top of the stack
-		pushNode->setNext(headPtr);
-		// Update headPtr to point to pushNode
-		headPtr = pushNode;
-	}
-
+	auto pushNode = std::make_shared<Node<ItemType>>(newItem, headPtr);
+	headPtr = pushNode;
 	currentSize++;
 
 	return true;
@@ -80,24 +55,14 @@ bool Stack<ItemType>::push(const ItemType &newItem)
 template <class ItemType>
 ItemType Stack<ItemType>::peek() const
 {
-
 	if (currentSize > 0)
 	{
-		ItemType returnItem;
-
-		Node<ItemType> *peekNode = headPtr;
-
-		returnItem = peekNode->getItem();
-
-		return returnItem;
+		return headPtr->getItem();
 	}
-	else
-	{
-		throw 505;
-		exit(EXIT_FAILURE);
+	else{
+		throw(std::logic_error("cant be empty"));
 	}
-
-} // end peek
+}
 
 // TODO: Implement the pop method here
 template <class ItemType>
@@ -105,11 +70,11 @@ bool Stack<ItemType>::pop()
 {
 	if (currentSize != 0)
 	{
-		Node<ItemType> *tempPtr = headPtr;
+		std::shared_ptr<Node<ItemType>> tempPtr = headPtr;
 		headPtr = headPtr->getNext();
 		currentSize--;
 		// delete temppointer->getNext();
-		delete tempPtr;
+
 		return true;
 	}
 	else
