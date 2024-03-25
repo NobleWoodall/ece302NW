@@ -52,7 +52,8 @@ public:
 
 private:
 
-  // TODO
+LinkedList<T> list;
+
 
 };
 

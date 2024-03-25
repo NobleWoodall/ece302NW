@@ -20,6 +20,7 @@ TEST_CASE("Testing isEmpty", "[sorted linked list]") {
 }
 
 TEST_CASE("Testing getLength", "[sorted linked list]") {
+  
   ListType lst;
   REQUIRE(lst.getLength() == 0);
 
