@@ -31,7 +31,7 @@ TEST_CASE("Testing all", "[queue]") {
   queue.enqueue(62);
   REQUIRE_FALSE(queue.isEmpty());
   REQUIRE(queue.peekFront() == 241);
-
+  
   Queue<int, List<int>> another_queue;
   another_queue = queue;
 

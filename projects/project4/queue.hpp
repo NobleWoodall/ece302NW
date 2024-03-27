@@ -11,10 +11,7 @@ public:
 
   // default constructor
   // not needed, default is ok
-  
-  // copy constructor
-  // not needed, default is ok
-  
+
   // destructor
   // not needed, default is ok
   
@@ -39,6 +36,7 @@ private:
 
   // L must conform to AbstractList interface
   L internal_list;
+
 };
 
 #include "queue.tpp"
